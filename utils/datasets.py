@@ -49,7 +49,7 @@ class GAD_SBT(object):
     ):
         self.file_dir = os.path.join(root_dir, f"sbt_{ms_per_frame}ms_{frame_per_sequence}frame_{T}stack_{sbt_method}", mode)
         self.files = os.listdir(self.file_dir)
-        self.box_file_id = np.load(os.path.join(root_dir, f"{mode}_box_file_id.npy"))
+        #self.box_file_id = np.load(os.path.join(root_dir, f"{mode}_box_file_id.npy"))
         self.root_dir = root_dir
         self.mode = mode
         self.width = width
@@ -77,13 +77,13 @@ class GAD_SBT(object):
         """
         frame = np.load(os.path.join(self.file_dir, "sample{}_frame.npy".format(idx))).astype(np.float32)
         label = np.load(os.path.join(self.file_dir, "sample{}_label.npy".format(idx))).astype(np.float32)
-        file, id = self.box_file_id[idx]
+        #file, id = self.box_file_id[idx]
         if self.transform is not None:
             resized_frame, resized_label = self.transform(frame.reshape(-1, self.height, self.width), label)
             h, w = resized_frame.shape[1], resized_frame.shape[2]
             resized_frame = resized_frame.reshape(self.T, self.frame_per_sequence, h, w)
-            return resized_frame, resized_label, label, frame, file
-        return frame, label, label, file
+            return resized_frame, resized_label, label, frame #, file
+        return frame, label, label #, file
 
 
 class NCARS_SBT(object):

@@ -24,14 +24,14 @@ def ori_target_frame_collate(batch):
     ori_targets = []
     imgs = []
     ori_imgs = []
-    file_id = []
+    #file_id = []
     for sample in batch:
         imgs.append(sample[0])
         targets.append(sample[1])
         ori_targets.append(sample[2])
         ori_imgs.append(sample[3])
-        file_id.append(sample[4])
-    return torch.from_numpy(np.stack(imgs, 0)), targets, ori_targets, torch.from_numpy(np.stack(ori_imgs, 0)), file_id
+        #file_id.append(sample[4])
+    return torch.from_numpy(np.stack(imgs, 0)), targets, ori_targets, torch.from_numpy(np.stack(ori_imgs, 0)) #, file_id
 
 
 class MSEWithLogitsLoss(nn.Module):

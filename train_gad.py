@@ -102,8 +102,8 @@ if __name__ == "__main__":
     train_dataset = GAD_SBT(
         root_dir = args.data_path, 
         object_classes = "all", 
-        height = 240, 
-        width = 304, 
+        height = 640, 
+        width = 640, 
         mode = "train", 
         ms_per_frame = args.time_per_frame, 
         frame_per_sequence = args.frame_per_stack, 
@@ -114,8 +114,8 @@ if __name__ == "__main__":
     val_dataset = GAD_SBT(
         root_dir = args.data_path, 
         object_classes = "all", 
-        height = 240, 
-        width = 304, 
+        height = 640, 
+        width = 640, 
         mode = "val", 
         ms_per_frame = args.time_per_frame, 
         frame_per_sequence = args.frame_per_stack, 
@@ -230,8 +230,8 @@ if __name__ == "__main__":
             tmp_lr = tmp_lr * 0.1
             set_lr(optimizer, tmp_lr)
     
-        for iter_i, (images, targets, original_label, original_frame, file) in enumerate(train_dataloader):
-
+        #for iter_i, (images, targets, original_label, original_frame, file) in enumerate(train_dataloader):
+        for iter_i, (images, targets, original_label, original_frame) in enumerate(train_dataloader):
             for key in mem_keys:
                 exec(f"model.{key:s}.mem=None")
 
@@ -297,7 +297,8 @@ if __name__ == "__main__":
             with torch.no_grad():
                 for id_, data in enumerate(val_dataloader):
 
-                    image, targets, original_label, original_frame, file = data
+                    #image, targets, original_label, original_frame, file = data
+                    image, targets, original_label, original_frame = data
                     for label in original_label:
                         gt_label_list.append(label)
                     targets = [label.tolist() for label in targets]
@@ -331,7 +332,7 @@ if __name__ == "__main__":
                         nms_thresh = args.nms_thresh
                     )
                     bboxes = [box * size for box in bboxes]
-                    bboxes = [resized_box_to_original(box, val_size, 240, 304) for box in bboxes]
+                    bboxes = [resized_box_to_original(box, val_size, 640, 640) for box in bboxes]
                     
                     for i in range(len(bboxes)):
                         pred_label = []
@@ -347,7 +348,8 @@ if __name__ == "__main__":
                                 "score": score} # COCO JSON format
                             pred_label.append(A)
                         pred_label_list.append(pred_label)
-                map50_95, map50 = coco_eval(gt_label_list, pred_label_list, height=240, width=304, labelmap=classes_name)
+                #map50_95, map50 = coco_eval(gt_label_list, pred_label_list, height=240, width=304, labelmap=classes_name)
+                map50_95, map50 = coco_eval(gt_label_list, pred_label_list, height=640, width=640, labelmap=classes_name)
             cur_map = map50
             
             conf_loss_item = sum(conf_loss_list).item() / batch_num

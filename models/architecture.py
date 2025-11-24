@@ -264,7 +264,7 @@ class SpikeFPN_GAD(nn.Module):
         self.feature = newFeature(init_channels, network_path_fea, cell_arch_fea, args=args)
         self.stride = self.feature.stride
         num_out = len(self.stride)
-        anchor_size = cfg[f"anchor_size_gen1_{num_out * 3}"]
+        anchor_size = cfg["anchor_size_sdg"] #cfg[f"anchor_size_gen1_{num_out * 3}"]
         self.anchor_list = anchor_size
         self.anchor_size = torch.tensor(anchor_size).reshape(len(self.stride), len(anchor_size) // len(self.stride), 2).float()
         self.num_anchors = self.anchor_size.size(1)
